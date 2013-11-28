@@ -101,9 +101,9 @@ public class Pioche {
 		return c;
 	}
 	
-	public void delFirst(){
+	public void clearPioche(){
 		
-		pioche.remove(0);
+		pioche.clear();
 		
 	}
 	

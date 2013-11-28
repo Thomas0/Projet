@@ -1,6 +1,7 @@
 package Core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Partie {
@@ -45,7 +46,7 @@ public class Partie {
 	
 	public void ajouterJoueurReel(int nombre) {
 		
-		for(int i = joueur.size(); i < nombre;i++) {
+		for(int i = 0; i < nombre;i++) {
 			
 			joueur.add(new Joueur(i,true));
 			
@@ -55,56 +56,80 @@ public class Partie {
 	
 	public void ajouterJoueurVirtuel(int nombre) {
 		
-		for(int i = joueur.size(); i < nombre + joueur.size();i++) {
+		Integer size = joueur.size();
+		
+		for(int i = joueur.size(); i < nombre + size;i++) {
 			
 			joueur.add(new Joueur(i,false));
 		}
 		
 	}
 	
-	public void joueurSuivant() {
+	public Integer joueurSuivant(Integer r) {
+	
+	if(this.sens == true){
+		
+		if ( r == joueur.size()-1) {
+			
+			r = 0;
+			return r;
+			
+		} else {
+			r++;
+			return r;
+		}
+
+	}else {
+		
+	if ( r == 0) {
+			
+			r = joueur.size()-1;
+			return r;
+			
+		} else {
+			r--;
+			return r;
+		}
 		
 	}
+}
 	
 	public void demarrer() {
 		
-		Joueur j1 = new Joueur(1,true);
-		Joueur j2 = new Joueur(2,true);	
-		Carte c;
+		ajouterJoueurReel(1);
+		ajouterJoueurVirtuel(1);
 		
+		Carte c;
+		Joueur j = new Joueur();		
 		this.estCommencer = true;
+		Integer u = 0;
 		
 		pio = Pioche.getInstance();
 		talon = Talon.getInstance();
 		
 		pio.generationPioche();
 		
-		// on distribue les cartes (juste pour tester sinon il faut créer une methode dans la classe Joueur)
-		for (int i = 0; i<7;i++) {
-			
-			c = pio.piocher();
-			j1.ajoutCarte(c);
-			c = pio.piocher();
-			j2.ajoutCarte(c);
-		}
 		
-		
-		
-		System.out.println("j1 à " + j1.getSizeCarteEnMain() + " cartes");
-		System.out.println("j2 à " + j2.getSizeCarteEnMain() + " cartes");
-		System.out.println("Il reste " + pio.getSizeCarteEnMain() + " cartes dans la pioche");
+		Integer r = j.distribuer(joueur);
 		
 		// on initialise le talon
 		c = pio.piocher();
 		talon.poserCarte(c);
 		
-	//debut tour	
-	//		while(this.estFini == false) {
+	    // debut tour	
+		while(this.estFini == false) {
 		
-	    	j1.jouer();
-			
-			
-	//	}
+	    	j = joueur.get(r);
+			j.jouer();
+			u = j.getSizeCarteEnMain();
+			if (u == 0) {
+				this.estFini = true;
+			} else{
+			r = joueurSuivant(r);
+			}
+		}
+		
+		System.out.println("la Partie est terminée. Le joueur " + r + " a gagné");
 		
 		
 	}

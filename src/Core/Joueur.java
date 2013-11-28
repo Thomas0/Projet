@@ -1,6 +1,7 @@
 package Core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Joueur implements IStrategie{
@@ -14,6 +15,10 @@ public class Joueur implements IStrategie{
 	
 	Talon talon = Talon.getInstance();	
 	Pioche pioche = Pioche.getInstance();
+	
+	public Joueur() {
+		
+	}
 	
 	public Joueur(int id, boolean reel) {
 		
@@ -64,12 +69,14 @@ public class Joueur implements IStrategie{
 		
 	}
 	
+	
 	public void jouer() {
 		
 		Carte c;
+		System.out.println("c'est au joueur " + this.id + " de jouer");	
 		
 		if (this.estReel == true) {
-			
+	
 			// on affiche les cartes en main
 			for(int i = 0; i < carteEnmain.size();i++) {
 	    		c = carteEnmain.get(i);
@@ -145,14 +152,125 @@ public class Joueur implements IStrategie{
 		
 	}
 
+	
+	public Integer distribuer(ArrayList<Joueur> listejoueur) {
+		
+		ArrayList<Integer> dist = new ArrayList<Integer>();
+		Carte c;
+		Joueur j;
+		
+		for(int i = 0;i < listejoueur.size();i++) {
+			c = pioche.piocher();
+			
+			if(c.isEstSpecial() == true) {
+				dist.add(0);
+				} else {
+					
+					dist.add(c.getNumero());
+				}
+			
+		}
+		
+		Integer i = dist.indexOf(Collections.max(dist));
+		Integer itemoin = dist.indexOf(Collections.max(dist));
+		System.out.println("Le joueur " + Integer.toString(i) + " distribue");
+		
+		if ( i == listejoueur.size()-1) {
+			
+			i = 0;
+			
+		} else {
+			i++;
+		}
+		boolean z;
+		
+		// on reinitialise la pioche
+		pioche.clearPioche();
+		pioche.generationPioche();
+		
+		// on distribue
+		for (int k = 0; k < 7;k++) {
+			z = false;
+			while (z == false) {
+				
+				if (i == listejoueur.size()-1) {
+					j = listejoueur.get(i);
+					j.ajoutCarte(pioche.piocher());
+					i = 0;
+					
+					
+				} else {
+					j = listejoueur.get(i);
+					j.ajoutCarte(pioche.piocher());
+					i++;
+						}
+				
+				if(k==0 && i == itemoin) {
+				
+					j = listejoueur.get(itemoin);
+					j.ajoutCarte(pioche.piocher());
+					
+				}
+				
+				if (i == itemoin) {
+					z = true;
+				}
+			
+													}
+		
+								}
+		
+		//on return l'index du joueur qui doit jouer le premier tour
+		if ( itemoin == listejoueur.size()-1) {
+			
+			i = 0;
+			return i;
+			
+		} else {
+			i++;
+			return i;
+		}
+		
+	
+	}
+	
+	
+	
+	
+	
 	public boolean isReel() {
 		return estReel;
 	}
 
 	@Override
 	public void strategie() {
-		// TODO Auto-generated method stub
 		
+		Carte c;
+	    carteJouable = carteJouable(talon.derniereCarte());		
+		
+	    
+		if (carteJouable.size() == 0) {
+			
+			System.out.println("Le joueur " + this.id + " pioche une carte");
+			c = pioche.piocher();
+			
+			//on test si la carte pioché est jouable
+			if (c.peutEtreJouer() == true) {
+				System.out.println("Le joueur " + this.id + " joue une carte");
+				talon.poserCarte(c);
+				carteEnmain.remove(c);
+			} else {
+				
+				ajoutCarte(c);
+				
+			}
+			
+		} else {
+			talon.poserCarte(carteJouable.get(0));
+			carteEnmain.remove(0);
+		}
+		
+		carteJouable.clear();
 	}
 	
 	

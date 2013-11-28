@@ -31,7 +31,9 @@ public class Talon {
 	
 	public void poserCarte(Carte c) {
 		talon.add(c);
+		System.out.println(" ");
 		System.out.println("Carte sur le Talon : " + c.getNumero() + " " + c.getCouleur());
+		System.out.println(" ");
 		
 	}
 	

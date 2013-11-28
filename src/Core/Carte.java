@@ -33,6 +33,10 @@ public class Carte {
 		
 	}
 	
+	public boolean isEstSpecial() {
+		return estSpecial;
+	}
+
 	public String getCouleur() {
 		return couleur;
 	}

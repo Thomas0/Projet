@@ -42,6 +42,15 @@ public class Pioche {
 			
 		}
 		
+	pioche.add(new Inversion("0",0,true));
+	pioche.add(new Inversion("0",0,true));
+	
+	pioche.add(new PlusDeux("1",0,true));
+	pioche.add(new PlusDeux("1",0,true));
+
+	pioche.add(new PasseTour("3",0,true));
+	pioche.add(new PasseTour("3",0,true));
+	
 	//génération des 19 cartes vertes
 		v = 0;
 		i = 0;
@@ -56,6 +65,15 @@ public class Pioche {
 			}
 			
 		}
+		
+		pioche.add(new Inversion("0",1,true));
+		pioche.add(new Inversion("0",1,true));
+		
+		pioche.add(new PlusDeux("1",1,true));
+		pioche.add(new PlusDeux("1",1,true));
+		
+		pioche.add(new PasseTour("3",1,true));
+		pioche.add(new PasseTour("3",1,true));
 		
 	//génération des 19 cartes rouges
 		
@@ -73,6 +91,15 @@ public class Pioche {
 			
 		}
 		
+		pioche.add(new Inversion("0",2,true));
+		pioche.add(new Inversion("0",2,true));
+		
+		pioche.add(new PlusDeux("1",2,true));
+		pioche.add(new PlusDeux("1",2,true));
+		
+		pioche.add(new PasseTour("3",2,true));
+		pioche.add(new PasseTour("3",2,true));
+		
 	//génération des 19 cartes jaunes
 		
 		v = 0;
@@ -89,7 +116,25 @@ public class Pioche {
 			
 		}
 		
-	
+		pioche.add(new Inversion("0",3,true));
+		pioche.add(new Inversion("0",3,true));
+		
+		pioche.add(new PlusDeux("1",3,true));
+		pioche.add(new PlusDeux("1",3,true));
+		
+		pioche.add(new PasseTour("3",3,true));
+		pioche.add(new PasseTour("3",3,true));
+		
+		pioche.add(new PlusQuatre("2",4,true));
+		pioche.add(new PlusQuatre("2",4,true));
+		pioche.add(new PlusQuatre("2",4,true));
+		pioche.add(new PlusQuatre("2",4,true));
+		
+		pioche.add(new Joker("4",4,true));
+		pioche.add(new Joker("4",4,true));
+		pioche.add(new Joker("4",4,true));
+		pioche.add(new Joker("4",4,true));
+		
 		// on melange les cartes
 		Collections.shuffle(pioche);
 		

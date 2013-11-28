@@ -39,7 +39,7 @@ public class Joueur implements IStrategie{
 		for (int i = 0;i < size;i++) {
 			c = carteEnmain.get(i);
 			
-			if (c.getNumero() == talon.getNumero() || c.getCouleur() == talon.getCouleur()) {
+			if (c.peutEtreJouer() == true) {
 				carteJouable.add(c);
 				
 			}
@@ -80,8 +80,11 @@ public class Joueur implements IStrategie{
 			// on affiche les cartes en main
 			for(int i = 0; i < carteEnmain.size();i++) {
 	    		c = carteEnmain.get(i);
+	    		if(c.isEstSpecial() == false){
 	    		System.out.println("Carte n°"+ i + " : " + c.getNumero() + " " + c.getCouleur());
-	    		
+	    		}else{
+	    			System.out.println("Carte n°"+ i + " : " + c.getType() + " " + c.getCouleur());
+	    		}
 	    	}
 			
 			//on affiche les cartes jouables
@@ -91,8 +94,11 @@ public class Joueur implements IStrategie{
 			for (int i = 0; i < size;i++) {
 				c = cartejouable.get(i);
 				
-				System.out.println("Cartes jouables : " + c.getNumero() + " " + c.getCouleur());
-			
+				if(c.isEstSpecial() == false){
+		    		System.out.println("Carte jouable : " + c.getNumero() + " " + c.getCouleur());
+		    		}else{
+		    			System.out.println("Carte jouable : " + c.getType() + " " + c.getCouleur());
+		    		}
 			}
 			
 			// on test s'il y a des cartes jouables
@@ -101,13 +107,20 @@ public class Joueur implements IStrategie{
 				System.out.println("Vous ne pouvez jouer aucune carte, il faut piocher");
 				c = pioche.piocher();
 				
-				System.out.println("Vous avez piocher un " + c.getNumero() + " " + c.getCouleur());
+				if(c.isEstSpecial() == false){
+		    		System.out.println("Vous avez piocher un : " + c.getNumero() + " " + c.getCouleur());
+		    		}else{
+		    			System.out.println("Vous avez piocher une carte spéciale : " + c.getType() + " " + c.getCouleur());
+		    		}
+				
 				
 				//on test si la carte pioché est jouable
 				if (c.peutEtreJouer() == true) {
 					System.out.println("Vous jouez cette carte");
 					talon.poserCarte(c);
-					
+					if (c.isEstSpecial() == true){
+						c.effet();
+					}
 				} else {
 					
 					ajoutCarte(c);
@@ -127,10 +140,17 @@ public class Joueur implements IStrategie{
 				
 					//on test si la carte peut etre jouer
 					if (c.peutEtreJouer() == true) {
-					
-						System.out.println("Vous avez jouer le " + c.getNumero() + " " + c.getCouleur());
+						if(c.isEstSpecial() == false){
+				    		System.out.println("Vous avez jouer le " + c.getNumero() + " " + c.getCouleur());
+				    		}else{
+				    			System.out.println("Vous avez jouer la carte spéciale : " + c.getType() + " " + c.getCouleur());
+				    		}
+						
 						talon.poserCarte(c);
 						carteEnmain.remove(Integer.parseInt(str));
+						if (c.isEstSpecial() == true){
+							c.effet();
+						}
 						cartejouable.clear();
 						jouer = true;
 						
@@ -220,17 +240,8 @@ public class Joueur implements IStrategie{
 		
 								}
 		
-		//on return l'index du joueur qui doit jouer le premier tour
-		if ( itemoin == listejoueur.size()-1) {
-			
-			i = 0;
-			return i;
-			
-		} else {
-			i++;
-			return i;
-		}
-		
+		//on return l'id du donneur
+		return itemoin;
 	
 	}
 	
@@ -258,7 +269,13 @@ public class Joueur implements IStrategie{
 			if (c.peutEtreJouer() == true) {
 				System.out.println("Le joueur " + this.id + " joue une carte");
 				talon.poserCarte(c);
+				
+				if (c.isEstSpecial() == true){
+					c.effet();
+				}
+				
 				carteEnmain.remove(c);
+				
 			} else {
 				
 				ajoutCarte(c);
@@ -266,11 +283,21 @@ public class Joueur implements IStrategie{
 			}
 			
 		} else {
-			talon.poserCarte(carteJouable.get(0));
-			carteEnmain.remove(0);
+			c = carteJouable.get(0);
+			talon.poserCarte(c);
+			
+			if (c.isEstSpecial() == true){
+				c.effet();
+			}
+			
+			carteEnmain.remove(c);
 		}
 		
 		carteJouable.clear();
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 	

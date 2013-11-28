@@ -1,15 +1,13 @@
 package Core;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+
 
 public class Partie {
 
-	private boolean estCommencer;
 	private boolean estFini;
 	private boolean sens;
-	private int nbJoueur;
+	private int joueursuivant;
 	
 	private ArrayList<Joueur> joueur = new ArrayList<Joueur>();
 	
@@ -20,7 +18,6 @@ public class Partie {
 	
 	private Partie() {
 		
-		this.estCommencer = false;
 		this.estFini = false;
 		this.sens = true;
 		
@@ -71,24 +68,24 @@ public class Partie {
 		
 		if ( r == joueur.size()-1) {
 			
-			r = 0;
-			return r;
+			joueursuivant = 0;
+			return joueursuivant;
 			
 		} else {
-			r++;
-			return r;
+			joueursuivant++;
+			return joueursuivant;
 		}
 
 	}else {
 		
 	if ( r == 0) {
 			
-			r = joueur.size()-1;
-			return r;
+		    joueursuivant = joueur.size()-1;
+			return joueursuivant;
 			
 		} else {
-			r--;
-			return r;
+			joueursuivant--;
+			return joueursuivant;
 		}
 		
 	}
@@ -97,11 +94,9 @@ public class Partie {
 	public void demarrer() {
 		
 		ajouterJoueurReel(1);
-		ajouterJoueurVirtuel(1);
+		ajouterJoueurVirtuel(2);
 		
-		Carte c;
 		Joueur j = new Joueur();		
-		this.estCommencer = true;
 		Integer u = 0;
 		
 		pio = Pioche.getInstance();
@@ -110,29 +105,155 @@ public class Partie {
 		pio.generationPioche();
 		
 		
-		Integer r = j.distribuer(joueur);
+		joueursuivant = j.distribuer(joueur);
 		
 		// on initialise le talon
-		c = pio.piocher();
-		talon.poserCarte(c);
+		initTalon();
+		
 		
 	    // debut tour	
 		while(this.estFini == false) {
 		
-	    	j = joueur.get(r);
+	    	j = joueur.get(joueursuivant);
 			j.jouer();
 			u = j.getSizeCarteEnMain();
 			if (u == 0) {
 				this.estFini = true;
 			} else{
-			r = joueurSuivant(r);
+				joueursuivant = joueurSuivant(joueursuivant);
 			}
 		}
-		
-		System.out.println("la Partie est terminée. Le joueur " + r + " a gagné");
+
+		System.out.println("la Partie est terminée. Le joueur " + joueursuivant + " a gagné");
 		
 		
 	}
+	
+	public void initTalon(){
+		Carte c;
+		c = pio.piocher();
+		talon.poserCarte(c);
+	
+	if (c.isEstSpecial() == true){	
+		boolean test = false;
+		while(test == false){
+			if (c.getType() == "PlusQuatre"){
+				c = pio.piocher();
+				talon.poserCarte(c);
+					if(c.isEstSpecial() == false){
+						if ( joueursuivant == joueur.size()-1) {
+							
+							joueursuivant = 0;
+							
+						} else {
+							joueursuivant++;
+							
+						}
+						test = true;
+					}
+			}else {
+				c.effet();
+			if(sens == true){
+				if ( joueursuivant == joueur.size()-1) {
+					
+					joueursuivant = 0;
+					
+				} else {
+					joueursuivant++;
+					
+				}
+			}else {
+				if(joueursuivant == 0) {
+					joueursuivant = joueur.size()-1;
+				}else{
+					joueursuivant--;
+				}
+			}
+				test = true;
+			}
+		}
+	}else {
+		if(sens == true){
+			if ( joueursuivant == joueur.size()-1) {
+				
+				joueursuivant = 0;
+				
+			} else {
+				joueursuivant++;
+				
+			}
+		}else {
+			if(joueursuivant == 0) {
+				joueursuivant = joueur.size()-1;
+			}else{
+				joueursuivant--;
+			}
+		}
+		}
+	
+			
+			
+		}
+
+			
+		
+	
+
+	public boolean isSens() {
+		return sens;
+	}
+
+	public void setSens(boolean sens) {
+		this.sens = sens;
+	}
+
+	public Joueur getJoueursuivant() {
+		if(joueursuivant == joueur.size()-1){
+			return joueur.get(0);
+		}else {
+			return joueur.get(joueursuivant+1);
+		}
+	
+	}
+	
+	public Joueur getJoueurActuel() {
+		
+			return joueur.get(joueursuivant);
+	
+	}
+
+	public void setJoueursuivant(int joueursuivant) {
+		this.joueursuivant = joueursuivant;
+	}
+	
+	public int getNumJoueurSuivant(){
+		if(joueursuivant == joueur.size()-1) {
+			return 0;
+		}else {
+			return joueursuivant+1;
+		}
+		
+	}
+	
+	public int getNumJoueurPrecedent(){
+		
+		if(joueursuivant == 0) {
+			return joueur.size()-1;
+		}else {
+			return joueursuivant-1;
+		}
+	
+	}
+
+	public Joueur getJoueurPrecedent() {
+		if(joueursuivant == 0) {
+			return joueur.get(joueur.size()-1);
+		}else{
+			return joueur.get(joueursuivant-1);
+		}
+
+}
+	
 	
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-public class Joueur implements IStrategie{
+public class Joueur {
 
 	private int id;
 	private int nbCarteEnMain;
@@ -26,9 +26,11 @@ public class Joueur implements IStrategie{
 		this.estReel = reel;
 	}
 
+	/**
+	 * Permet au joueur de dire UNO
+	 */
 	public void direUno(){
-		
-	
+		System.out.println("Le joueur " + this.id + " dit UNO");
 	}
 	
 	public ArrayList<Carte> carteJouable(Carte talon) {
@@ -164,10 +166,6 @@ public class Joueur implements IStrategie{
 				jouer = false;
 		}
 	}
-		else {
-			
-			strategie();
-		}
 		
 		
 	}
@@ -253,7 +251,6 @@ public class Joueur implements IStrategie{
 		return estReel;
 	}
 
-	@Override
 	public void strategie() {
 		
 		Carte c;
@@ -298,6 +295,14 @@ public class Joueur implements IStrategie{
 
 	public int getId() {
 		return id;
+	}
+
+	public ArrayList<Carte> getCarteJouable() {
+		return carteJouable;
+	}
+	
+	public void removeCarte(Carte c) {
+		this.carteEnmain.remove(c);
 	}
 	
 	

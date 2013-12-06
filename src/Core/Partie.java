@@ -1,6 +1,7 @@
 package Core;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Partie {
@@ -62,6 +63,11 @@ public class Partie {
 		
 	}
 	
+	/**
+	 * Methode permettant d'obtenir le numéro du joueur suivante
+	 * @param r numéro du joueur actuel
+	 * @return Retourne le numéro du joueur suivant
+	 */
 	public Integer joueurSuivant(Integer r) {
 	
 	if(this.sens == true){
@@ -92,9 +98,17 @@ public class Partie {
 }
 	
 	public void demarrer() {
+		Scanner sc = new Scanner(System.in);
 		
-		ajouterJoueurReel(1);
-		ajouterJoueurVirtuel(2);
+		System.out.println("Nombre de joueur réel : ");
+		int joueurr = Integer.parseInt(sc.nextLine());
+		
+		ajouterJoueurReel(joueurr);
+	
+		System.out.println("Nombre de joueur virtuel : ");
+		int joueurv = Integer.parseInt(sc.nextLine());
+		
+		ajouterJoueurVirtuel(joueurv);
 		
 		Joueur j = new Joueur();		
 		Integer u = 0;
@@ -115,8 +129,18 @@ public class Partie {
 		while(this.estFini == false) {
 		
 	    	j = joueur.get(joueursuivant);
-			j.jouer();
+	    	
+	    	if (j.isReel() == true) {
+	    		j.jouer();
+	    	} else {
+	    		StrategieA s1 = new StrategieA();
+				s1.strategie(j);
+	    	}
+		
 			u = j.getSizeCarteEnMain();
+			if(u==1) {
+				j.direUno();
+			}
 			if (u == 0) {
 				this.estFini = true;
 			} else{

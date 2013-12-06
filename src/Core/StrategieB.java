@@ -7,7 +7,7 @@ public class StrategieB implements IStrategie {
 	}
 
 	@Override
-	public void strategie() {
+	public void strategie(Joueur j) {
 		// TODO Auto-generated method stub
 		
 	}

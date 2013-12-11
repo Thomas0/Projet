@@ -67,5 +67,12 @@ public class Talon {
 		
 	}
 	
+public void clearTalon(){
+		
+		talon.clear();
+		
+	}
+	
+	
 
 }

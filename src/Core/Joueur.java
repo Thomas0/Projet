@@ -9,6 +9,7 @@ public class Joueur {
 	private int id;
 	private int nbCarteEnMain;
 	private boolean estReel;
+	private int score;
 
 	private ArrayList<Carte> carteEnmain = new ArrayList<Carte>();
 	private ArrayList<Carte> carteJouable = new ArrayList<Carte>();
@@ -24,6 +25,7 @@ public class Joueur {
 		
 		this.id = id;
 		this.estReel = reel;
+		this.score = 0;
 	}
 
 	/**
@@ -293,6 +295,45 @@ public class Joueur {
 		carteJouable.clear();
 	}
 
+	
+	public int getValeurMain(){
+		
+		int sc=0;
+		Carte c;
+		
+		for(int i = 0; i < carteEnmain.size();i++){
+			c = carteEnmain.get(i);
+			
+			if(c.isEstSpecial() == false) {
+				sc = sc + c.getNumero();
+			}
+			else {
+				String type;
+				type = c.getType();
+				
+				switch(type){
+				
+				case "Inversion":
+					sc = sc + 20;
+				case "PlusDeux":
+					sc = sc + 20;
+				case "PasserTour":
+					sc = sc + 20;
+				case "Joker":
+					sc = sc + 50;
+				case "PlusQuatre":
+					sc = sc + 50;
+				
+				}
+			}
+			
+		}
+		
+		return sc;
+	}
+	
+		
+	
 	public int getId() {
 		return id;
 	}
@@ -304,6 +345,22 @@ public class Joueur {
 	public void removeCarte(Carte c) {
 		this.carteEnmain.remove(c);
 	}
+	
+	public void clearMain(){
+		
+		carteEnmain.clear();
+		
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	
 	
 	
 }

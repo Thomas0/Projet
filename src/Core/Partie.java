@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class Partie {
 
-	private boolean estFini;
+	private boolean estFiniManche;
+	private boolean estFiniPartie;
 	private boolean sens;
 	private int joueursuivant;
 	
@@ -19,7 +20,8 @@ public class Partie {
 	
 	private Partie() {
 		
-		this.estFini = false;
+		this.estFiniManche = false;
+		this.estFiniPartie = false;
 		this.sens = true;
 		
 	}
@@ -98,6 +100,10 @@ public class Partie {
 }
 	
 	public void demarrer() {
+		
+		pio = Pioche.getInstance();
+		talon = Talon.getInstance();
+		
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.println("Nombre de joueur réel : ");
@@ -112,21 +118,21 @@ public class Partie {
 		
 		Joueur j = new Joueur();		
 		Integer u = 0;
+
+
 		
-		pio = Pioche.getInstance();
-		talon = Talon.getInstance();
+	while (this.estFiniPartie == false)	{
+		
+		this.estFiniManche = false;
 		
 		pio.generationPioche();
 		
 		
 		joueursuivant = j.distribuer(joueur);
-		
-		// on initialise le talon
 		initTalon();
 		
-		
 	    // debut tour	
-		while(this.estFini == false) {
+		while(this.estFiniManche == false) {
 		
 	    	j = joueur.get(joueursuivant);
 	    	
@@ -142,17 +148,27 @@ public class Partie {
 				j.direUno();
 			}
 			if (u == 0) {
-				this.estFini = true;
+				this.estFiniManche = true;
+				
 			} else{
 				joueursuivant = joueurSuivant(joueursuivant);
 			}
 		}
-
-		System.out.println("la Partie est terminée. Le joueur " + joueursuivant + " a gagné");
+		j.setScore(j.getScore() + compterPoint());
+		System.out.println("la Manche est terminée. Le joueur " + joueursuivant + " a gagné. Il a " + j.getScore() +" points");
 		
+	
+	if (j.getScore() >= 500) {
+		System.out.println("la Partie est terminée. Le joueur " + joueursuivant + " a gagné.");
+		this.estFiniPartie = true;
 		
+	}else {
+		System.out.println("Aucun joueur ne possède 500 points. Lancement d'une nouvelle manche.");
+		clearPartie();
 	}
 	
+}
+	}
 	public void initTalon(){
 		Carte c;
 		c = pio.piocher();
@@ -277,6 +293,51 @@ public class Partie {
 		}
 
 }
+	
+	public void clearPartie() {
+		
+		pio.clearPioche();
+		talon.clearTalon();
+		Joueur j;
+		for(int i = 0; i < joueur.size();i++){
+			j = joueur.get(i);
+			j.clearMain();
+			
+		}
+		
+	}
+	
+	public int compterPoint(){
+		int point = 0;
+		int i = joueursuivant;
+		Joueur j;
+		boolean test = false;
+		
+		if (i == joueur.size() - 1) {
+			i = 0;
+		} else {
+			i++;
+			
+		}
+		
+		while(i != joueursuivant) {
+			
+			j = joueur.get(i);
+			point = point + j.getValeurMain();
+			
+			
+			if (i == joueur.size() - 1) {
+				i = 0;
+			} else {
+				i++;
+				
+			}
+			
+		}
+		
+		
+		return point;
+	}
 	
 	
 

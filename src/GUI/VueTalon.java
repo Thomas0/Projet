@@ -14,15 +14,32 @@ import javax.swing.JLabel;
 
 import Core.Talon;
 
+/**
+ * Classe gérant la vue du talon
+ * 
+ * @see Core.Talon
+ */
 public class VueTalon implements Observer {
+	/**
+	 * Talon géré par la vue
+	 */
 	private Talon talon;
+
+	/**
+	 * JLabel représentant la vue
+	 */
 	private JLabel labelTalon;
 
+	/**
+	 * Constructeur de la vue : création du JLabel
+	 */
 	public VueTalon() {
+		// Récupération du talon et ajout aux observers
 		talon = Talon.getInstance();
 		talon.addObserver(this);
 
 		try {
+			// Création d'un label avec image dos de carte
 			BufferedImage img = ImageIO.read(new File("img/back.png"));
 			labelTalon = new JLabel(new ImageIcon(img));
 			labelTalon.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -30,11 +47,24 @@ public class VueTalon implements Observer {
 		}
 	}
 
+	/**
+	 * Fonction appelé lors de notification de la classe Talon. Met à jour
+	 * l'image de la carte sur le dessus du talon.
+	 * 
+	 * @param o
+	 *            Objet ayant déclenché la notification
+	 * @param arg
+	 *            Argument passé durant la notification
+	 * @see Core.Talon
+	 */
 	@Override
-	public void update(Observable talon, Object arg) {
+	public void update(Observable o, Object arg) {
+		// Récupération et création de la vue de la carte sur le ton
 		VueCarte vc = new VueCarte(this.talon.derniereCarte());
 		labelTalon.setIcon(vc.getJLabel().getIcon());
 
+		// Modification de la couleur de la bordure du JLabel en fonction de la
+		// couleur du talon (Utile après Joker ou +4)
 		if (this.talon.derniereCarte().getCouleur() == "bleu") {
 			labelTalon.setBorder(BorderFactory.createLineBorder(Color.blue));
 		} else if (this.talon.derniereCarte().getCouleur() == "rouge") {
@@ -46,6 +76,11 @@ public class VueTalon implements Observer {
 		}
 	}
 
+	/**
+	 * Récupère le JLabel représentant le Talon
+	 * 
+	 * @return JLabel représentant le talon
+	 */
 	public JLabel getJlabel() {
 		return labelTalon;
 	}
